@@ -52,7 +52,9 @@ This is not a static checklist. It is a way of thinking: at every point where so
 - Do not suppress warnings from scientific libraries (NumPy, SciPy, etc.). They often indicate real numerical problems like convergence failures or ill-conditioned matrices.
 - Never silently extrapolate beyond data range
 
-Think about what is mission-critical for the experiment to produce knowledge. If `model_id` is required for the experiment to be meaningful, do not write `config.get("model_id", "default_model")`. The experiment cannot produce valid results without it. Let it crash.
+Think about what is mission-critical for the experiment to produce knowledge. If `model_id` is required for the experiment to be meaningful, do not write `config.get("model_id", "default_model")` (Also see Section 4: Defaults go in a config file, not the code).
+
+**Important:** If the experiment cannot produce valid results without it, let it crash.
 
 In web development, every edge case needs graceful handling for uptime. In science, graceful handling of a missing essential parameter means you run an experiment that produces meaningless results and do not notice.
 

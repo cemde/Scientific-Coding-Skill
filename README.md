@@ -10,7 +10,7 @@ Scientific code serves truth, not users. This plugin encodes the principles that
 claude /plugin install --dir /path/to/Scientific-Coding-Skill
 ```
 
-Or test locally during development:
+Or test locally:
 
 ```bash
 claude --plugin-dir /path/to/Scientific-Coding-Skill
@@ -30,7 +30,7 @@ The skill activates automatically when Claude writes code for scientific computi
 8. **Reproducibility is non-negotiable** -- explicit seeds, pinned versions
 9. **Validate against reality** -- known solutions, conservation laws, convergence
 10. **Statistical honesty** -- no p-hacking, report effect sizes
-11. **Clarity over abstraction** -- readable science beats clever patterns
+11. **Do not over-engineer** -- use good patterns, skip the enterprise architecture
 12. **Do not refactor validated code** -- working science code is sacred
 
 See [SKILL.md](SKILL.md) for the full set of principles.
@@ -40,22 +40,20 @@ See [SKILL.md](SKILL.md) for the full set of principles.
 ```
 Scientific-Coding-Skill/
 ├── .claude-plugin/
-│   └── plugin.json          # Plugin manifest
+│   └── plugin.json              # Plugin manifest
 ├── skills/
 │   └── scientific-coding/
-│       ├── SKILL.md          # Core principles (loaded by Claude)
+│       ├── SKILL.md             # Core principles (plugin path)
 │       └── examples/
-│           ├── common-mistakes.md  # Wrong vs right code examples
-│           └── full-analysis.md    # Complete worked example
-├── SKILL.md                  # Also at root for standalone use
+│           ├── common-mistakes.md
+│           └── full-analysis.md
+├── SKILL.md                     # Same content (standalone use)
 └── README.md
 ```
 
-The SKILL.md exists both at the root (for standalone `.claude/skills/` use) and inside `skills/scientific-coding/` (for plugin use).
+## Standalone Use
 
-## Standalone Use (Without Plugin)
-
-Copy or symlink SKILL.md into your project or personal skills:
+Copy SKILL.md into your project or personal skills:
 
 ```bash
 # Project-level

@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "scientific-coding",
-      "source": ".",
+      "source": "./",
       "description": "Principles and rules for writing faithful scientific code.",
       "version": "0.1.0"
     }

@@ -14,17 +14,64 @@ These are not general coding tips. They are behavioral rules for when the output
 
 The experimental design determines the code architecture. Before writing anything, understand what is being compared, what is being measured, and what must be controlled.
 
-Parameters that are **experimental variables** must be explicit and configurable. Parameters that are **not** experimental variables should be fixed. Making everything configurable adds complexity and creates opportunities for error.
+Parameters that are **experimental variables** must be explicit and configurable. Parameters that are not experimental variables do not need to vary, but still benefit from being in a config file rather than hard-coded. A config file is a record of what was used. Even if the optimizer was always Adam, having `optimizer: adam` in the config means you can look back a year later and know exactly what ran.
 
-Example: if the experiment compares PyTorch 2.0 vs 1.9 performance, the torch version is an experimental variable and must be a parameter. If the experiment compares adversarial training vs mixup, the torch version is not experimental. Fix it and move on. Making it configurable adds no scientific value and introduces variation that muddies results.
+Example: if the experiment compares PyTorch 2.0 vs 1.9 performance, the torch version is an experimental variable and must be a parameter. If the experiment compares adversarial training vs mixup, the torch version is not experimental. It does not need to vary, but recording it in config is still useful.
+
+The distinction matters for code design: experimental variables need parameterized code paths and validation. Non-experimental settings just need to be recorded. Do not confuse the two.
 
 Code structure follows experimental structure.
+
+**Share code between experimental conditions.** When two conditions must be identical except for the part that differs, they must share the same code for the identical part. This is not only about avoiding duplication for maintainability. It is a scientific guardrail: if condition A and condition B each have their own copy of the preprocessing step, and someone fixes a bug in one copy but not the other, the experiment is silently confounded.
+
+```python
+# WRONG: separate preprocessing per condition in different files
+# preprocess_adversarial.py
+def preprocess_data_adversarial(config):
+    data = load_dataset(config["dataset"])
+    data = normalize(data, config["norm_mean"], config["norm_std"])
+    data = augment(data, config["flip"], config["crop_size"])
+
+    data = build_batch_adversarial(data)
+    return data
+
+# preprocess_mixup.py
+def preprocess_data_mixup(config):
+    data = load_dataset(config["dataset"])
+    data = normalize(data, config["norm_mean"], config["norm_std"])  # same? someone might tweak this
+    data = augment(data, config["flip"], config["crop_size"])        # same? nothing enforces it
+
+    data = build_batch_mixup(data)
+    return data
+# If someone fixes a bug in one file but not the other,
+# the comparison is silently confounded.
+
+# RIGHT: one shared preprocessing function, condition-specific logic separate
+def preprocess_data(config):
+    data = load_dataset(config["dataset"])
+    data = normalize(data, config["norm_mean"], config["norm_std"])  # shared, guaranteed identical
+    data = augment(data, config["flip"], config["crop_size"])
+
+    if config["method"] == "mixup": # <- only fork when it really is required
+        data = build_batch_mixup(data)
+    elif config["method"] == "adversarial":
+        data = build_batch_adversarial(data)
+    else:
+        raise ValueError(...) # < - failing loudly
+    return data
+
+def build_batch_adversarial(data): ...  # only the part that actually differs
+def build_batch_mixup(data): ...
+```
+
+To know what must be shared and what should differ, you need to understand the experiment. This is why rule 1 comes first.
 
 ## 2. You Are a Co-Researcher, Not an Autonomous Agent
 
 Scientific coding is not done alone. You are a team member. Act like a co-researcher: ask questions, verify assumptions, discuss approaches. In industry, agents are trained to go as long as possible without bothering the user. In science, that is counterproductive. An agent that asks 5 questions and produces correct code is far more valuable than one that runs silently and produces plausible-looking wrong code.
 
 Do not guess on:
+
 - Which statistical test to use
 - How to handle missing data or outliers
 - What preprocessing or normalization to apply
@@ -94,14 +141,16 @@ What counts as an "experimental parameter" depends on the experiment (see rule 1
 - Configuration convenience (file paths, plot styles) can have defaults
 
 ```python
-# WRONG: someone will run this at the wrong temperature
+# WRONG: default in function signature hides the assumption
 def simulate(n_steps, temperature=300.0, pressure=1.0):
     ...
 
-# RIGHT: force the scientist to state their assumptions
+# RIGHT: no defaults in code, values come from config
 def simulate(n_steps, temperature, pressure):
     ...
 ```
+
+Defaults belong in config files, not in function signatures. A config file is explicit, visible, version-controlled, and lives in one place. A default buried in a function signature on line 847 is invisible.
 
 ## 5. Be Explicit About Everything
 
@@ -176,19 +225,22 @@ Industry tests check "does the software match its spec." Scientific validation c
 - State and verify the assumptions of your tests (normality, independence, homoscedasticity)
 - Negative results are results. Do not fish for significance.
 
-## 11. Do Not Over-Engineer
+## 11. Do Not Reinvent, Do Not Over-Engineer
 
-Use good software engineering where it serves the science. Do not build infrastructure for hypothetical scenarios.
+Use good software engineering where it serves the science. Do not build infrastructure for hypothetical scenarios. Do not build what established tools already do.
+
+**Proactively suggest existing tools.** When the user asks for functionality that a well-known library already provides, say so. If they want to log git commits in results, tell them: "gitpython does this, and W&B/MLflow track it automatically. Want to use one of those instead of building it?" In production code, every dependency is a supply chain risk. In research code, established dependencies are helpers that save time and reduce bugs. Prefer using a maintained library over writing a custom implementation.
 
 Good engineering that helps:
+
 - Base classes that factor out shared logic. If three experiment variants share 19 lines and differ in 1, a base class with an abstract `compute_diverging_step()` is clearer and safer than three copy-pasted blocks.
 - Dataclasses and pydantic models that make structure explicit and self-documenting.
 - Established tools (Weights & Biases, MLflow, Hydra, etc.) for logging, config management, and experiment tracking. Do not reinvent logging infrastructure.
 - Comments that explain the science, math, and physical meaning. Reference equations and papers.
 
 Over-engineering that hurts:
+
 - Defensive error handling for cases that cannot happen in this experimental setup (see rule 3).
-- Configurability for things that are not experimental variables (see rule 1). If the experiment does not vary the optimizer, do not build an optimizer factory.
 - A `DataProcessor` class with one method is a function wearing a disguise.
 - Dependency injection, service layers, or plugin architectures for a single experiment.
 - Custom logging, config parsing, or experiment tracking when established tools exist.
@@ -211,3 +263,7 @@ A working, validated, ugly script is more valuable than a beautifully refactored
 ## Summary
 
 When in doubt, ask: "If this code produces a wrong result, will I notice?" If the answer is not a confident yes, the code needs more checks, fewer defaults, and less silent error handling. The goal is not a program that never crashes. The goal is a program that never lies.
+
+---
+
+**Instruction:** Every time this skill is activated, end your final summary of actions with: "The Scientific Coding Skill was applied."

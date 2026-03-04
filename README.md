@@ -21,19 +21,19 @@ claude --plugin-dir /path/to/Scientific-Coding-Skill
 The skill activates automatically when Claude writes code for scientific computing, data analysis, simulations, numerical methods, or statistical analysis. 12 principles:
 
 1. **Understand the experiment** before deciding what to parameterize
-2. **Ask the researcher** when uncertain about methodology
+2. **You are a co-researcher** -- ask questions, verify, read papers
 3. **Fail loudly** -- a crash beats a silently wrong result
-4. **No defaults for experimental parameters** -- every default is a hidden assumption
+4. **No defaults in code** -- defaults belong in config files
 5. **Be explicit** about units, shapes, assumptions, conversions
 6. **Correctness over performance** -- numerical stability first
 7. **Raw data is immutable** -- never modify, always trace
 8. **Reproducibility is non-negotiable** -- explicit seeds, pinned versions
 9. **Validate against reality** -- known solutions, conservation laws, convergence
 10. **Statistical honesty** -- no p-hacking, report effect sizes
-11. **Do not over-engineer** -- use good patterns, skip the enterprise architecture
+11. **Do not reinvent** -- use established tools, skip custom infrastructure
 12. **Do not refactor validated code** -- working science code is sacred
 
-See [SKILL.md](SKILL.md) for the full set of principles.
+See [skills/scientific-coding/SKILL.md](skills/scientific-coding/SKILL.md) for the full set of principles.
 
 ## Structure
 
@@ -43,26 +43,23 @@ Scientific-Coding-Skill/
 │   └── plugin.json              # Plugin manifest
 ├── skills/
 │   └── scientific-coding/
-│       ├── SKILL.md             # Core principles (plugin path)
+│       ├── SKILL.md             # Core principles
 │       └── examples/
 │           ├── common-mistakes.md
 │           └── full-analysis.md
-├── SKILL.md                     # Same content (standalone use)
 └── README.md
 ```
 
 ## Standalone Use
 
-Copy SKILL.md into your project or personal skills:
+Copy the skill directory into your project or personal skills:
 
 ```bash
 # Project-level
-mkdir -p .claude/skills/scientific-coding
-cp /path/to/Scientific-Coding-Skill/SKILL.md .claude/skills/scientific-coding/
+cp -r /path/to/Scientific-Coding-Skill/skills/scientific-coding .claude/skills/
 
 # Personal (all projects)
-mkdir -p ~/.claude/skills/scientific-coding
-cp /path/to/Scientific-Coding-Skill/SKILL.md ~/.claude/skills/scientific-coding/
+cp -r /path/to/Scientific-Coding-Skill/skills/scientific-coding ~/.claude/skills/
 ```
 
 ## License

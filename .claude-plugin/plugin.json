@@ -5,8 +5,5 @@
   "author": {
     "name": "Cornelius Emde"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/cemde/Scientific-Coding-Skill"
-  }
+  "repository": "https://github.com/cemde/Scientific-Coding-Skill"
 }

@@ -6,14 +6,30 @@ Scientific code serves truth, not users. This plugin encodes the principles that
 
 ## Install
 
-From GitHub:
+### As a plugin (from GitHub)
 
-```bash
+In Claude Code, run:
+
+```
 /plugin marketplace add cemde/Scientific-Coding-Skill
 /plugin install scientific-coding@cemde-Scientific-Coding-Skill
 ```
 
-For local development:
+The first command adds this repo as a plugin marketplace. The second installs the skill from it. The skill will be available in all your projects.
+
+### As a standalone skill (copy into your project)
+
+Clone the repo and copy the skill directory:
+
+```bash
+# Into a single project
+cp -r Scientific-Coding-Skill/skills/scientific-coding your-project/.claude/skills/
+
+# Into all your projects (personal skills)
+cp -r Scientific-Coding-Skill/skills/scientific-coding ~/.claude/skills/
+```
+
+### For local development
 
 ```bash
 claude --plugin-dir /path/to/Scientific-Coding-Skill
@@ -54,18 +70,6 @@ Scientific-Coding-Skill/
 └── README.md
 ```
 
-## Standalone Use
-
-Copy the skill directory into your project or personal skills:
-
-```bash
-# Project-level
-cp -r /path/to/Scientific-Coding-Skill/skills/scientific-coding .claude/skills/
-
-# Personal (all projects)
-cp -r /path/to/Scientific-Coding-Skill/skills/scientific-coding ~/.claude/skills/
-```
-
 ## Contributing
 
 Contributions are welcome. In particular:
@@ -84,6 +88,12 @@ This skill was developed through iterative refinement between a researcher and C
 
 If you use this skill in your research or reference it in a publication, see [CITATION.cff](CITATION.cff).
 
-## License
-
-MIT
+```bibtex
+@software{emde2025scientificcoding,
+  author    = {Emde, Cornelius},
+  title     = {Scientific Coding Skill},
+  year      = {2025},
+  url       = {https://github.com/cemde/Scientific-Coding-Skill},
+  version   = {0.1.0}
+}
+```

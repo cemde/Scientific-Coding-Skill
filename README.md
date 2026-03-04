@@ -6,11 +6,14 @@ Scientific code serves truth, not users. This plugin encodes the principles that
 
 ## Install
 
+From GitHub:
+
 ```bash
-claude /plugin install --dir /path/to/Scientific-Coding-Skill
+/plugin marketplace add cemde/Scientific-Coding-Skill
+/plugin install scientific-coding@cemde-Scientific-Coding-Skill
 ```
 
-Or test locally:
+For local development:
 
 ```bash
 claude --plugin-dir /path/to/Scientific-Coding-Skill
@@ -40,7 +43,8 @@ See [skills/scientific-coding/SKILL.md](skills/scientific-coding/SKILL.md) for t
 ```
 Scientific-Coding-Skill/
 ├── .claude-plugin/
-│   └── plugin.json              # Plugin manifest
+│   ├── plugin.json              # Plugin manifest
+│   └── marketplace.json         # Marketplace catalog
 ├── skills/
 │   └── scientific-coding/
 │       ├── SKILL.md             # Core principles
@@ -61,6 +65,24 @@ cp -r /path/to/Scientific-Coding-Skill/skills/scientific-coding .claude/skills/
 # Personal (all projects)
 cp -r /path/to/Scientific-Coding-Skill/skills/scientific-coding ~/.claude/skills/
 ```
+
+## Contributing
+
+Contributions are welcome. In particular:
+
+- **Validation experiments.** Have you tested whether this skill actually changes Claude's coding behavior? We would love to see before/after comparisons, failure cases, or systematic evaluations.
+- **New principles or examples.** If you have encountered a scientific coding mistake that LLMs make repeatedly, open an issue or PR.
+- **Corrections.** If a principle is wrong, misleading, or missing nuance, say so.
+
+Open an issue or submit a pull request at [github.com/cemde/Scientific-Coding-Skill](https://github.com/cemde/Scientific-Coding-Skill).
+
+## Acknowledgements
+
+This skill was developed through iterative refinement between a researcher and Claude, attempting to bridge the gap between how LLMs are trained to write code (for production) and how scientific code must be written (for truth). Contributions, criticism, and validation experiments from the community are appreciated.
+
+## Citation
+
+If you use this skill in your research or reference it in a publication, see [CITATION.cff](CITATION.cff).
 
 ## License
 

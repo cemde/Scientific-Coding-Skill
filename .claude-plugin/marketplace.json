@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "plugins": [
+    {
+      "name": "scientific-coding",
+      "version": "0.1.0",
+      "description": "Principles and rules for writing faithful scientific code. Scientific code serves truth, not users.",
+      "source": {
+        "type": "local",
+        "path": "."
+      }
+    }
+  ]
+}

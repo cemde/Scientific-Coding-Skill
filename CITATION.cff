@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "Scientific Coding Skill"
+abstract: "A Claude Code plugin that encodes principles for writing correct scientific code. Covers experimental design, reproducibility, error handling, statistical honesty, and validation."
+authors:
+  - family-names: Emde
+    given-names: Cornelius
+url: "https://github.com/cemde/Scientific-Coding-Skill"
+repository-code: "https://github.com/cemde/Scientific-Coding-Skill"
+license: MIT
+version: 0.1.0
